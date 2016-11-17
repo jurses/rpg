@@ -1,17 +1,13 @@
-local gmltl = require("gmltl")
-local mapa = require("tp")
-local img = love.graphics.newImage("minas.png")
-
+local mapa = require("prueba")
+local oem = require("oem")
 function love.load()
-	mapa = gmltl.nuevaCapa(mapa,1 )
-	mapa:nuevoset_M(img, 1)
-	mapa:leerCapa()
+	mapa1 = oem.new(mapa,2)
 end
 
 function love.update(dt)
-
+	mapa1:obtMundo(dt)
 end
 
 function love.draw()
-	mapa:mostrarCapa()
+	mapa1:dibjMapa()
 end
