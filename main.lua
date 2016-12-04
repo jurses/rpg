@@ -5,7 +5,7 @@ function love.load()
 end
 
 function love.update(dt)
-	mapa1:obtMundo(dt)
+	mapa1:update(dt)
 end
 
 function love.draw()

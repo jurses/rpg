@@ -22,7 +22,7 @@ function creaFormasPolig(mundo,polig,pos)	-- devuelve una tabla de triángulos d
 	for i,v in ipairs(love.math.triangulate(creaPolig(polig))) do
 		table.insert(rec.b,love.physics.newBody(mundo,0,0,"static"))
 		table.insert(rec.s,love.physics.newPolygonShape(v,pos.x,pos.y))
-		table.insert(rec.f,love.physics.newFixture(rec.poltrb[i],rec.poltrs[i]))
+		table.insert(rec.f,love.physics.newFixture(rec.b[i],rec.s[i]))
 	end
 	
 	return rec
@@ -46,22 +46,23 @@ function oem.new(mapa,capa)
 		for i,v in ipairs(mapa.layers[capa].objects) do
 			local pos={x=v.x,y=v.y}
 			if v.shape == "polygon" then
-				priv.polig = creaFormasPolig(priv.mundo,v.polygon[1],pos)
+				priv.polig = creaFormasPolig(priv.mundo,v.polygon,pos)
 			end
 		end
 	end
 
-	function oem:obtMundo()
-		return priv.mundo
+	function publ:update(dt)
+		priv.mundo:update(dt)
 	end
 	
-	function oem:dibjMapa()
+	function publ:dibjMapa()
+		love.graphics.setColor(255,255,255)
 		for i,v in ipairs(priv.polig) do
-			love.graphics.polygon(v.b:getWorldPoints(v.s:getPoints()))
+			love.graphics.polygon("line",v.b:getWorldPoints(v.s:getPoints()))
 		end
 	end
  
-	function oem:ponMundo(allow)
+	function publ:ponMundo(allow)
 		priv.mundo:setSleepingAllowed(allow)
 	end
 
