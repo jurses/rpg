@@ -1,4 +1,5 @@
 oem = {}
+inspect = require("inspect")
 -- obstáculos y eventos del mapa
 
 function creaPolig(polig,x,y)
@@ -13,19 +14,23 @@ function creaPolig(polig,x,y)
 	return endresult
 end
 
-function creaFormasPolig(mundo,polig,pos)	-- devuelve una tabla de triángulos del polígono
+function creaFormasPolig(mundo,polig,x,y)	-- devuelve una tabla de triángulos del polígono
 	local rec = {}
 	rec.b = {}
 	rec.s = {}
 	rec.f = {}
 	
-	for i,v in ipairs(love.math.triangulate(creaPolig(polig))) do
+	for i,v in ipairs(love.math.triangulate(creaPolig(polig,x,y))) do
 		table.insert(rec.b,love.physics.newBody(mundo,0,0,"static"))
-		table.insert(rec.s,love.physics.newPolygonShape(v,pos.x,pos.y))
+		table.insert(rec.s,love.physics.newPolygonShape(v,x,y))
 		table.insert(rec.f,love.physics.newFixture(rec.b[i],rec.s[i]))
 	end
-	
+
 	return rec
+end
+
+function numeroTriang(cuerpo)
+	return #cuerpo
 end
 
 function creaFormasRC(fig)	-- devuelve una forma (shape) de una figura para círculos o rect.
@@ -44,9 +49,8 @@ function oem.new(mapa,capa)
 	
 	if mapa.layers[capa].type == "objectgroup" then
 		for i,v in ipairs(mapa.layers[capa].objects) do
-			local pos={x=v.x,y=v.y}
 			if v.shape == "polygon" then
-				priv.polig = creaFormasPolig(priv.mundo,v.polygon,pos)
+				table.insert(priv.polig,creaFormasPolig(priv.mundo,v.polygon,v.x,v.y))
 			end
 		end
 	end
@@ -56,9 +60,10 @@ function oem.new(mapa,capa)
 	end
 	
 	function publ:dibjMapa()
-		love.graphics.setColor(255,255,255)
 		for i,v in ipairs(priv.polig) do
-			love.graphics.polygon("line",v.b:getWorldPoints(v.s:getPoints()))
+			for j=1, #v.b do
+				love.graphics.polygon("fill",priv.polig[i].b[j]:getWorldPoints(priv.polig[i].s[j]:getPoints()))
+			end
 		end
 	end
  
