@@ -1,5 +1,5 @@
 local oem = {}
-local inspect = require("inspect")
+-- local inspect = require("inspect")
 -- obstáculos y eventos del mapa
 
 function creaPolig(polig,x,y)
