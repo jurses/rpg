@@ -2,13 +2,6 @@ local pers={}
 
 pers.tocando=0
 
-function pers.sincr(sensor,persona)
-    if sensor:getX() ~= persona:getX() or sensor:getY() ~= persona:getY() then
-        print("sincronizando")
-        sensor:setPosition(persona:getPosition())
-    end
-end
-
 function pers.beginCallback(fixture1, fixture2, contact)
     if fixture1:getUserData() == "sensor" or fixture2:getUserData() == "sensor" then
         pers.tocando = pers.tocando + 1
@@ -39,25 +32,32 @@ function pers.new(world,x,y)
 	priv.sens.f:setUserData("sensor")
 	
 	world:setCallbacks(pers.beginCallback, pers.endCallback)
+	priv.j = love.physics.newWeldJoint(priv.pers.b,priv.sens.b,priv.pers.b:getX(),priv.pers.b:getY(),false)
 	
-	function publ:movPers(dt)
+	function priv.movPers(dt)
 		if love.keyboard.isDown("w") then
-			priv.sens.b:setLinearVelocity(0,-300)
 			priv.pers.b:setLinearVelocity(0,-300)
 		elseif love.keyboard.isDown("a") then
-			priv.sens.b:setLinearVelocity(-300,0)
 			priv.pers.b:setLinearVelocity(-300,0)
 		elseif love.keyboard.isDown("s") then
-			priv.sens.b:setLinearVelocity(0,300)
 			priv.pers.b:setLinearVelocity(0,300)
 		elseif love.keyboard.isDown("d") then
-			priv.sens.b:setLinearVelocity(300,0)
 			priv.pers.b:setLinearVelocity(300,0)
 		else
-			priv.sens.b:setLinearVelocity(0,0)
 			priv.pers.b:setLinearVelocity(0,0)
 		end
-        pers.sincr(priv.sens.b,priv.pers.b)
+	end
+
+	function priv.verEntr(key)
+		priv.cntct = priv.sens.b:getContactList()
+		if love.keyboard.isDown("f") and pers.tocando > 0 then
+			print(priv.cntct[1])
+		end
+	end
+
+	function publ:update(dt)
+		priv.movPers(dt)
+		priv.verEntr()
 	end
 
 	function publ:verPers()

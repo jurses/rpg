@@ -9,7 +9,7 @@ end
 
 function love.update(dt)
 	mapa1:update(dt)
-	pers1:movPers(dt)
+	pers1:update(dt)
 	if love.keyboard.isDown("up") then
 		cord.y = cord.y + 400*dt
 	elseif love.keyboard.isDown("down") then
