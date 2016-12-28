@@ -40,3 +40,5 @@ function camara:setScale(sx, sy)
   self.scaleX = sx or self.scaleX
   self.scaleY = sy or self.scaleY
 end
+
+return camara

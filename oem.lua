@@ -37,17 +37,16 @@ function creaFormasRC(fig)	-- devuelve una forma (shape) de una figura para cír
 	end
 end
 
-function oem.new(mapa,capa)
+function oem.new(mundo,mapa,capa)
 	publ = {}
 	priv = {}
-	priv.mundo = love.physics.newWorld(0,0,true)
 	priv.polig = {}
 	priv.canvas = love.graphics.newCanvas(mapa.width*mapa.tilewidth,mapa.height*mapa.tileheight)
 	
 	if mapa.layers[capa].type == "objectgroup" then
 		for i,v in ipairs(mapa.layers[capa].objects) do
 			if v.shape == "polygon" then
-				table.insert(priv.polig,creaFormasPolig(priv.mundo,v.polygon,v.x,v.y))
+				table.insert(priv.polig,creaFormasPolig(mundo,v.polygon,v.x,v.y))
 			end
 		end
 	end
@@ -63,7 +62,7 @@ function oem.new(mapa,capa)
 	love.graphics.setCanvas()
 
 	function publ:update(dt)
-		priv.mundo:update(dt)
+		mundo:update(dt)
 	end
 	
 	function publ:dibjMapa()
@@ -71,11 +70,11 @@ function oem.new(mapa,capa)
 	end
  
 	function publ:ponMundo(allow)
-		priv.mundo:setSleepingAllowed(allow)
+		mundo:setSleepingAllowed(allow)
 	end
 
 	function publ:obtMundo()
-		return priv.mundo
+		return mundo
 	end
 
 	return publ
